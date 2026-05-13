@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Қоштасу Кеші - Шақыру</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300;400;600;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+        
+        /* Stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+        
+        /* Disco Ball */
+        .disco-ball-container {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            animation: swing 4s ease-in-out infinite;
+        }
+        
+        @keyframes swing {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+            50% { transform: translateX(-50%) rotate(5deg); }
+        }
+        
+        .disco-ball {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+        
+        .disco-ball-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, transparent 50%),
+                repeating-conic-gradient(from 0deg, 
+                    #ff0080 0deg 10deg, 
+                    #ff8c00 10deg 20deg, 
+                    #ffd700 20deg 30deg, 
+                    #00ff88 30deg 40deg, 
+                    #00bfff 40deg 50deg, 
+                    #8b5cf6 50deg 60deg
+                );
+            box-shadow: 
+                0 0 60px rgba(255,0,128,0.5),
+                0 0 120px rgba(255,140,0,0.3),
+                inset 0 0 50px rgba(0,0,0,0.5);
+            animation: rotate 8s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Light beams */
+        .light-beam {
+            position: fixed;
+            width: 4px;
+            height: 100vh;
+            top: 0;
+            z-index: 0;
+            opacity: 0.3;
+            animation: beam-move 3s ease-in-out infinite;
+        }
+        
+        .light-beam:nth-child(1) { left: 20%; background: linear-gradient(to bottom, #ff0080, transparent); animation-delay: 0s; }
+        .light-beam:nth-child(2) { left: 40%; background: linear-gradient(to bottom, #00ff88, transparent); animation-delay: 0.5s; }
+        .light-beam:nth-child(3) { left: 60%; background: linear-gradient(to bottom, #ffd700, transparent); animation-delay: 1s; }
+        .light-beam:nth-child(4) { left: 80%; background: linear-gradient(to bottom, #00bfff, transparent); animation-delay: 1.5s; }
+        
+        @keyframes beam-move {
+            0%, 100% { opacity: 0.1; transform: scaleY(0.8); }
+            50% { opacity: 0.4; transform: scaleY(1.2); }
+        }
+        
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 250px 20px 50px;
+            text-align: center;
+        }
+        
+        /* Glitch Title */
+        .title {
+            font-family: 'Pacifico', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            position: relative;
+            animation: glitch 3s infinite;
+            text-shadow: 
+                0 0 10px #ff0080,
+                0 0 20px #ff0080,
+                0 0 40px #ff0080;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-3px, 2px); text-shadow: 3px -2px #00ff88; }
+            94% { transform: translate(3px, -2px); text-shadow: -3px 2px #00bfff; }
+            96% { transform: translate(-2px, 3px); text-shadow: 2px -3px #ffd700; }
+        }
+        
+        /* Neon Text */
+        .neon-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: neon-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes neon-pulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+            50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px #ff0080; }
+        }
+        
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .info-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,0,128,0.3), transparent 30%);
+            animation: border-rotate 4s linear infinite;
+        }
+        
+        .info-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(26,10,46,0.9);
+            border-radius: 18px;
+            z-index: 1;
+        }
+        
+        @keyframes border-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .info-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255,0,128,0.3);
+        }
+        
+        .info-card > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .info-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ff0080;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        /* Dress Code Section */
+        .dress-code {
+            margin: 40px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255,0,128,0.1), rgba(0,191,255,0.1));
+            border-radius: 30px;
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dress-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            to { left: 100%; }
+        }
+        
+        .dress-code h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+        
+        .dress-code p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        /* Guitar Request */
+        .guitar-request {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255,215,0,0.1);
+            border: 2px dashed #ffd700;
+            border-radius: 20px;
+            position: relative;
+            animation: border-dance 2s infinite;
+        }
+        
+        @keyframes border-dance {
+            0%, 100% { border-color: #ffd700; }
+            50% { border-color: #ff0080; }
+        }
+        
+        .guitar-request h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .guitar-request p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: float-up 10s linear infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* RSVP Button */
+        .rsvp-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 20px 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,0,128,0.4);
+            text-decoration: none;
+        }
+        
+        .rsvp-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255,0,128,0.6);
+        }
+        
+        .rsvp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .rsvp-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            padding: 30px;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .footer .heart {
+            color: #ff0080;
+            animation: heartbeat 1s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title { font-size: 2.2rem; }
+            .neon-text { font-size: 1rem; }
+            .disco-ball { width: 150px; height: 150px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .container { padding-top: 200px; }
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+        
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-bottom: 3px solid #ff0080;
+            border-right: 3px solid #ff0080;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Light Beams -->
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Disco Ball -->
+    <div class="disco-ball-container">
+        <div class="disco-ball">
+            <div class="disco-ball-inner"></div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="title">Қоштасу Кеші</h1>
+        
+        <p class="neon-text">
+            Құрметті ең үздік факультеттің ең үздік втораштары<br>
+            — сұлу ханымдары мен ардақты жігіттері!
+        </p>
+        
+        <p class="neon-text">
+            Сіздерді алтын перваштардың ұйымдастыруымен<br>
+            өтетін ерекше қоштасу кешіне шақырамыз!
+        </p>
+        
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-icon">📅</span>
+                <div class="info-label">Күні</div>
+                <div class="info-value">20.05.2026</div>
+            </div>
+            <div class="info-card">
+                <span class="info-icon">⏰</span>
+                <div class="info-label">Уақыты</div>
+                <div class="info-value">17:30</div>
+            </div>
+            <div class="info-card">
+                <span class="info-icon">📍</span>
+                <div class="info-label">Мекен-жайы</div>
+                <div class="info-value">Күйші Дина 4/3</div>
+            </div>
+        </div>
+        
+        <p class="neon-text">
+            Бұл кештен жылы атмосфера, көтеріңкі көңіл-күй<br>
+            және ұмытылмас естеліктер күтеді.
+        </p>
+        
+        <p class="neon-text">
+            Ал сіздерден тек керемет энергия<br>
+            мен әдемі көңіл-күй алып келу сұралады!
+        </p>
+        
+        <div class="dress-code">
+            <h2>👗 Dress Code</h2>
+            <p>
+                Өзіңізге ыңғайлы стиль<br>
+                Қалғанының бәрі — кештің өзінде!
+            </p>
+        </div>
+        
+        <div class="guitar-request">
+            <h3>🎸 Арнайы өтініш</h3>
+            <p>
+                Асқа мен Моди ағаларымыздан<br>
+                баян аты гитара алып келулерін өтінеміз!
+            </p>
+        </div>
+        
+        <p class="neon-text" style="font-size: 1.5rem; margin-top: 40px; font-weight: 700; color: #ffd700;">
+            Сол кеште көріскенше! ✨
+        </p>
+        
+        <div class="footer">
+            Алтын Первыштар ұйымдастыруымен <span class="heart">❤️</span>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})">
+        <span></span>
+    </div>
+    
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.width = Math.random() * 3 + 1 + 'px';
+            star.style.height = star.style.width;
+            starsContainer.appendChild(star);
+        }
+        
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        const colors = ['#ff0080', '#00ff88', '#ffd700', '#00bfff', '#ff8c00', '#8b5cf6'];
+        
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 8 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.width = Math.random() * 15 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Mouse parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.querySelectorAll('.info-card').forEach((card, index) => {
+                const speed = (index + 1) * 10;
+                card.style.transform = `translate(${(x - 0.5) * speed}px, ${(y - 0.5) * speed}px)`;
+            });
+        });
+        
+        // Text scramble effect on load
+        const title = document.querySelector('.title');
+        const originalText = title.textContent;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        
+        let iteration = 0;
+        const interval = setInterval(() => {
+            title.textContent = originalText
+                .split('')
+                .map((char, index) => {
+                    if (index < iteration) return originalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                })
+                .join('');
+            
+            if (iteration >= originalText.length) clearInterval(interval);
+            iteration += 1/3;
+        }, 30);
+        
+        // Confetti on click
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = e.clientX + 'px';
+                confetti.style.top = e.clientY + 'px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                document.body.appendChild(confetti);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 100 + 50;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                let posX = e.clientX;
+                let posY = e.clientY;
+                let opacity = 1;
+                
+                const animate = () => {
+                    posX += vx * 0.02;
+                    posY += vy * 0.02 + 2;
+                    opacity -= 0.02;
+                    confetti.style.left = posX + 'px';
+                    confetti.style.top = posY + 'px';
+                    confetti.style.opacity = opacity;
+                    
+                    if (opacity > 0) requestAnimationFrame(animate);
+                    else confetti.remove();
+                };
+                
+                requestAnimationFrame(animate);
+            }
+        });
+        
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.info-card, .dress-code, .guitar-request').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
