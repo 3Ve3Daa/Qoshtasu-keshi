@@ -1,1 +1,0 @@
-# Qoshtasu-keshi
